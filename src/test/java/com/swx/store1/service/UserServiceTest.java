@@ -50,6 +50,9 @@ public class UserServiceTest {
 
 //        int i = userDao.insert(user);
         userService.register(user);
+
+
+        //检查一下为啥不会抛异常了！~！！！！！！！！！！！！！！！！！！！！！！！！！！！！
     }
 
     @Test
@@ -61,7 +64,8 @@ public class UserServiceTest {
 
     @Test
     public void contextLoads3() {
-        System.out.println(new Date());
+        User user = new User(null, "name6", "1231", "333", "123", "email", 1, "avator",0 );
+        userService.login(user);
 
 
     }

@@ -10,4 +10,6 @@ import com.swx.store1.entity.User;
 public interface UserService extends IService<User> {
 
     void register(User user);
+
+    User login(User user);
 }

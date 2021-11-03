@@ -147,10 +147,10 @@
 				url:"/users/register",
 				type:"POST",
 				//序列化后的值为，如：username=333&password=dasdasd
-				data: $("#form-reg").serialize()    ,
+				data: $("#form-reg").serialize()  ,
 				dataType:"json",
 				success: function(JSONResponse){
-					if(JSONResponse.state==200){
+					if(JSONResponse.state===200){
 						alert("注册成功");
 					}else {
 						alert("注册失败，原因："+JSONResponse.message);

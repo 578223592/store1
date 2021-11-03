@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * Author: Admin
  * Date: 2021/11/3 10:09
@@ -24,6 +26,8 @@ public class UserController extends UserBaseController {
     @Autowired
     UserServiceImpl userService;
 
+
+    //SpringBoot将传入的参数与pojo类中的变量名（set方法）匹配，匹配成功就把参数传入pojo类中的字段
     @RequestMapping("/register")
     public JsonResult<Void> register(User user) {
         //更新UserBaseController之后就不用再关注异常的捕获了，美滋滋
@@ -33,6 +37,28 @@ public class UserController extends UserBaseController {
         jsonResult.setMessage("插入成功");
         return jsonResult;
     }
+    //SpringBoot将传入的参数与pojo类中的变量名（set方法）匹配，匹配成功就把参数传入pojo类中的字段
+    @RequestMapping("/login")
+    public JsonResult<User> login(User user, HttpSession session) {
+        JsonResult<User> jsonResult = new JsonResult<>();
+         user = userService.login(user);
+        jsonResult.setState("200");
+        setUidInSession(session,user.getId());
+        setUsernameInSession(session,user.getUsername());
+        return jsonResult;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     /*@RequestMapping("/register")
     public JsonResult<Void> register(User user){
         JsonResult<Void> jsonResult = new JsonResult<>();

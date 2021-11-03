@@ -1,10 +1,10 @@
 package com.swx.store1.controller;
 
-import com.swx.store1.service.ex.InsertException;
-import com.swx.store1.service.ex.ServiceException;
-import com.swx.store1.service.ex.UserNameDuplicatedException;
+import com.swx.store1.service.ex.*;
 import com.swx.store1.utils.JsonResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * Author: Admin
@@ -27,6 +27,37 @@ public class UserBaseController {
             jsonResult.setState("4000");
             jsonResult.setMessage("插入发生未知错误");
         }
+
+        if (e instanceof UserNameNotExistException){
+            jsonResult.setState("3000");
+            jsonResult.setMessage("用户不存在");
+        }else if (e instanceof PasswordNotMatchException){
+            jsonResult.setState("2000");
+            jsonResult.setMessage("用户密码输入错误");
+        }
         return jsonResult;
+    }
+
+    /*
+    每个controller都有可能往session里面存放数据，因此把session存储的方法给抽离到BaseController里面
+     */
+
+    /**
+     * @author admin
+     * @Date 2021/11/3 17:18
+     * @Description
+     */
+
+    protected void setUidInSession(HttpSession session,Integer uid){
+        session.setAttribute("uid",uid);
+    }
+    protected void setUsernameInSession(HttpSession session,String username){
+        session.setAttribute("username",username);
+    }
+    protected Integer getUidInSession(HttpSession session, Integer uid){
+       return (Integer)session.getAttribute("uid");
+    }
+    protected String getUsernameInSession(HttpSession session, String username){
+       return (String)session.getAttribute("username");
     }
 }
