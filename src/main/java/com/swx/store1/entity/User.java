@@ -14,6 +14,7 @@ import java.io.Serializable;
  * FileName: User
  * Description:
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @TableName(value ="store1.t_user")
 public class User extends BaseEntity implements Serializable {
@@ -21,7 +22,7 @@ public class User extends BaseEntity implements Serializable {
      * 用户id
      */
     @TableId(value="uid",type = IdType.AUTO)
-    private Integer uid;
+    private Integer id;
 
     /**
      * 用户名
@@ -66,8 +67,8 @@ public class User extends BaseEntity implements Serializable {
     public User() {
     }
 
-    public User(Integer uid, String username, String password, String salt, String phone, String email, Integer gender, String avatar, Integer isDelete) {
-        this.uid = uid;
+    public User(Integer id, String username, String password, String salt, String phone, String email, Integer gender, String avatar, Integer isDelete) {
+        this.id = id;
         this.username = username;
         this.password = password;
         this.salt = salt;

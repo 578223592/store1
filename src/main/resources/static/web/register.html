@@ -138,6 +138,33 @@
 			</div>
 		</footer>
 		<!--页脚结束-->
+
+	<script type="text/javascript">
+		//监听注册按钮是否被点击
+		$("#btn-reg").click(function(){
+			//发送ajax()异步请求完成用户注册
+			$.ajax({
+				url:"/users/register",
+				type:"POST",
+				//序列化后的值为，如：username=333&password=dasdasd
+				data: $("#form-reg").serialize()    ,
+				dataType:"json",
+				success: function(JSONResponse){
+					if(JSONResponse.state==200){
+						alert("注册成功");
+					}else {
+						alert("注册失败，原因："+JSONResponse.message);
+					}
+
+				},
+				error: function(xhr) {
+					//这个xhr.status不是自己定义的，是官方提供的错误的码，注意
+					alert("注册失败，原因：产生未知错误"+xhr.status);
+				}
+			})
+		})
+
+	</script>
 	</body>
 
 </html>
