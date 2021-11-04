@@ -151,11 +151,19 @@
 				url: "/users/login",
 				type:"POST",
 				data:$("#form-login").serialize(),
-				dataType:
-				success:function{
+				dataType:"json",
+				success: function(JSONResponse){
+					if(JSONResponse.state==200){
+						alert("登录成功");
+					}else {
+						alert("登录失败，原因："+JSONResponse.message);
+					}
 
-			}
-
+				},
+				error: function(xhr) {
+					//这个xhr.status不是自己定义的，是官方提供的错误的码，注意
+					alert("error，原因：产生未知错误"+xhr.status);
+				}
 			})
 
 		})

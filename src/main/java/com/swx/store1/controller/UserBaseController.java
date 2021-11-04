@@ -54,10 +54,10 @@ public class UserBaseController {
     protected void setUsernameInSession(HttpSession session,String username){
         session.setAttribute("username",username);
     }
-    protected Integer getUidInSession(HttpSession session, Integer uid){
+    protected Integer getUidInSession(HttpSession session){
        return (Integer)session.getAttribute("uid");
     }
-    protected String getUsernameInSession(HttpSession session, String username){
+    protected String getUsernameInSession(HttpSession session){
        return (String)session.getAttribute("username");
     }
 }

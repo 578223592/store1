@@ -8,6 +8,7 @@ import com.swx.store1.utils.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
@@ -45,6 +46,16 @@ public class UserController extends UserBaseController {
         jsonResult.setState("200");
         setUidInSession(session,user.getId());
         setUsernameInSession(session,user.getUsername());
+        return jsonResult;
+    }
+    @RequestMapping("/change_password")
+    public JsonResult<Void> changePassword(@RequestParam(required = false,value = "oldPassword") String oldPassword
+    ,@RequestParam(required = false,value = "newPassword") String newPassword
+    ,HttpSession session){
+        JsonResult<Void> jsonResult = new JsonResult<>();
+        Integer uid = getUidInSession(session);
+        userService.updatePassword(uid,oldPassword,newPassword);
+        jsonResult.setState("200");
         return jsonResult;
     }
 
