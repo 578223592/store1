@@ -24,8 +24,6 @@ public class UserMapperTest {
      * @Description ：1.必须呗@Test注解修饰
      *                  2.不能有返回值
      *                  3.方法的参数列表不指定任何类型
-
-
      */
     /**
      * @author admin

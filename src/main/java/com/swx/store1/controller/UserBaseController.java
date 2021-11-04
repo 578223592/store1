@@ -28,7 +28,7 @@ public class UserBaseController {
             jsonResult.setMessage("插入发生未知错误");
         }
 
-        if (e instanceof UserNameNotExistException){
+        if (e instanceof UserNotExistException){
             jsonResult.setState("3000");
             jsonResult.setMessage("用户不存在");
         }else if (e instanceof PasswordNotMatchException){

@@ -51,8 +51,6 @@ public class UserServiceTest {
 //        int i = userDao.insert(user);
         userService.register(user);
 
-
-        //检查一下为啥不会抛异常了！~！！！！！！！！！！！！！！！！！！！！！！！！！！！！
     }
 
     @Test
@@ -69,5 +67,8 @@ public class UserServiceTest {
 
 
     }
-
+    @Test
+    public void updatePassword(){
+        userService.updatePassword(110,"123","456");
+    }
 }

@@ -22,7 +22,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
         // 创建拦截器对象
         HandlerInterceptor loginInterceptor = new LoginInterceptor();
         // 白名单
-        List<String> patterns = new ArrayList<String>();
+        List<String> patterns = new ArrayList<>();
         patterns.add("/bootstrap3/**");
         patterns.add("/css/**");
         patterns.add("/images/**");
@@ -37,7 +37,9 @@ public class InterceptorConfig implements WebMvcConfigurer {
         patterns.add("/products/**");
 
         // 通过注册工具添加拦截器
-        registry.addInterceptor(loginInterceptor).addPathPatterns("/**").excludePathPatterns(patterns);
+        registry.addInterceptor(loginInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns(patterns);
     }
 
 

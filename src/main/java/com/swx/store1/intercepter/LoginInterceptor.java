@@ -22,6 +22,5 @@ public class LoginInterceptor implements HandlerInterceptor {
             return false;
         }
         return true;
-        //还未测试拦截器
     }
 }

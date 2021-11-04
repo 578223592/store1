@@ -1,14 +1,12 @@
 package com.swx.store1.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.swx.store1.entity.User;
 import com.swx.store1.mapper.UserMapper;
 import com.swx.store1.service.UserService;
-import com.swx.store1.service.ex.InsertException;
-import com.swx.store1.service.ex.PasswordNotMatchException;
-import com.swx.store1.service.ex.UserNameDuplicatedException;
-import com.swx.store1.service.ex.UserNameNotExistException;
+import com.swx.store1.service.ex.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -71,7 +69,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         userQueryWrapper.eq("username", user.getUsername()).eq("is_delete", 0);
         User findUser = userDao.selectOne(userQueryWrapper);
         if (findUser == null) {
-            throw new UserNameNotExistException("根据用户名查询用户，用户不存在，请检查");
+            throw new UserNotExistException("根据用户名查询用户，用户不存在，请检查");
         }
         String passwordAfterMD5 = PasswordMD5(user.getPassword(), findUser.getSalt());
         if (!passwordAfterMD5.equals(findUser.getPassword())) {
@@ -86,6 +84,40 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         resultUser.setUsername(findUser.getUsername());
         resultUser.setAvatar(findUser.getAvatar());
         return resultUser;
+    }
+/**
+ * @author admin
+ * @Date 2021/11/4 20:02
+ * @Description 虽然已经可以保证修改密码的时候用户已经登录，但是在正式开始修改密码的时候还是验证一下用户是否存在，
+ *              因为可能登录之后，修改密码之前账户就被管理员删除了，虽然几率很小，但是还是需要检查，在各种地方避免错误
+ */
+
+    @Override
+    public void updatePassword(Integer uid, String oldPassword, String newPassword) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(User::getId,uid)
+                .eq(User::getIsDelete,0);
+        User user = userDao.selectOne(queryWrapper);
+        if (user==null) {
+            throw new UserNotExistException("修改密码时发现此用户已不存在");
+        }
+        if (!user.getPassword().equals(PasswordMD5(oldPassword,user.getSalt()))){
+            throw new PasswordNotMatchException("修改密码时,"+uid+"用户输入的旧密码不匹配");
+        }
+        //注意update方法使用userDao.update(user, updateWrapper);的时候会在传入的user对象的值和updateWrapper中设置的值取
+        //并集--》即同时采取两个的值都进行修改，因此传入的user要把不修改的值设置为null（mp不修改该字段），
+        // 需要在数据库字段里面设置为null的值要在updateWrapper中设置（mp会将该字段设置为null）
+        // 因此如果只修改某些字段的话最好传入一个新的user对象或者使用其他方式更新
+        UpdateWrapper<User> updateWrapper = new UpdateWrapper<User>();
+        updateWrapper.set("password",PasswordMD5(newPassword,user.getSalt()))
+                .set("modified_time",new Date())
+                .set("modified_user","思无邪-修改密码")
+                .eq("uid",user.getId());
+        int update = userDao.update(new User(), updateWrapper);
+        if (update!=1){
+            throw new UpdateException("修改密码时发生未知错误，修改失败");
+        }
+
     }
 
 

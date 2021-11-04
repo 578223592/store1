@@ -5,7 +5,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import java.util.TimeZone;
 
 
 @SpringBootApplication
@@ -13,7 +12,8 @@ import java.util.TimeZone;
 public class Store1Application {
 
     public static void main(String[] args) {
-        TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));
-        SpringApplication.run(Store1Application.class, args);
+        ConfigurableApplicationContext context = SpringApplication.run(Store1Application.class, args);
+        String serverPort = context.getEnvironment().getProperty("server.port");
+        System.out.println("store2 started at http://localhost:" + serverPort);
     }
 }
