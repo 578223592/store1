@@ -120,6 +120,59 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     }
 
+    /*
+    更新用户数据(非密码)
+     */
+    @Override
+    public void updateInfo(Integer uid, String phone, String email, Integer gender) {
+        UpdateWrapper<User> updateWrapper = new UpdateWrapper<User>()
+                .set("phone", phone)
+                .set("email", email)
+                .set("gender", gender)
+                .set("modified_time", new Date())
+                .set("modified_user", "思无邪-修改用户信息")
+                .eq("uid", uid);
+        int row = userDao.update(new User(), updateWrapper);
+        if (row!=1){
+            throw new UpdateException("修改用户信息时发生未知错误，修改失败");
+        }
+
+    }
+
+    @Override
+    public User getUserPartInfoById(Integer uid) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<User>().eq("uid", uid);
+        User userFind = userDao.selectOne(queryWrapper);
+        if (userFind==null ||userFind.getIsDelete()==1){
+            throw new UserNotExistException("该用户不存在");
+        }
+        User user = new User();
+        user.setUsername(userFind.getUsername());
+        user.setPhone(userFind.getPhone());
+        user.setEmail(userFind.getEmail());
+        user.setGender(userFind.getGender());
+        return user;
+    }
+
+    @Override
+    public void updateAvatar(Integer uid, String avatar) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<User>().eq("uid", uid);
+        User userFind = userDao.selectOne(queryWrapper);
+        if (userFind==null ||userFind.getIsDelete()==1){
+            throw new UserNotExistException("该用户不存在");
+        }
+        UpdateWrapper<User> updateWrapper = new UpdateWrapper<User>()
+                .set("avatar", avatar)
+                .set("modified_time", new Date())
+                .set("modified_user", "思无邪-修改用户头像")
+                .eq("uid", uid);
+        int row = userDao.update(new User(), updateWrapper);
+        if (row!=1){
+            throw new UpdateException("修改用户头像时发生未知错误，修改失败");
+        }
+
+    }
+
 
     /**
      * @author admin
@@ -136,6 +189,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
         return password;
     }
+
+
 }
 
 

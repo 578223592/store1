@@ -155,6 +155,8 @@
 				success: function(JSONResponse){
 					if(JSONResponse.state==200){
 						alert("登录成功");
+						 $.cookie("avatar",JSONResponse.data.avatar,{expires:7});
+						location.href ="/web/index.html"
 					}else {
 						alert("登录失败，原因："+JSONResponse.message);
 					}

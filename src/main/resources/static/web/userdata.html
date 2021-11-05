@@ -147,7 +147,7 @@
 							<div class="form-group">
 								<label class="col-md-2 control-label">电话号码：</label>
 								<div class="col-md-8">
-									<input `id="phone" name="phone" type="text" class="form-control" placeholder="请输入电话号码" value="13311311313">
+									<input id="phone" name="phone" type="text" class="form-control" placeholder="请输入电话号码" value="13311311313">
 								</div>
 							</div>
 							<div class="form-group">
@@ -262,6 +262,51 @@
 			</div>
 		</footer>
 		<!--页脚结束-->
-	</body>
+	<script type="text/javascript">
+		$("#btn-change-info").click(function(){
+			$.ajax({
+				url: "/users/change_info",
+				type:"POST",
+				data: $("#form-change-info").serialize(),
+				dataType:"json",
+				success: function(JSONResponse){
+					if(JSONResponse.state==200){
+						alert("信息修改成功")
+					}else {
+						alert("信息修改失败，原因："+JSONResponse.message);
+					}
+				},
+				error: function(xhr) {
+					//这个xhr.status不是自己定义的，是官方提供的错误的码，注意
+					alert("error，原因：产生未知错误"+xhr.status);
+				}
+			});
+		})
 
+		$("document").ready(function() {
+			$.ajax({
+				url: "/users/get_user_part_info_by_uid",
+				type:"POST",
+				data: "",
+				dataType:"json",
+				success: function(JSONResponse){
+					if(JSONResponse.state==200){
+						$("#username").val(JSONResponse.data.username);
+						$("#phone").val(JSONResponse.data.phone);
+						$("#email").val(JSONResponse.data.email);
+						let gender = JSONResponse.data.gender==0?$("#gender-female"):$("#gender-male");
+						gender.prop("checked",true);
+					}else {
+						alert("失败，原因："+JSONResponse.message);
+					}
+				},
+				error: function(xhr) {
+					//这个xhr.status不是自己定义的，是官方提供的错误的码，注意
+					alert("error，原因：产生未知错误"+xhr.status);
+				}
+			})
+
+		})
+	</script>
+	</body>
 </html>

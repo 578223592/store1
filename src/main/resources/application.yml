@@ -19,6 +19,12 @@ spring:
       testOnReturn: false
       poolPreparedStatements: false
       maxPoolPreparedStatementPerConnectionSize: 200
+  servlet:
+    multipart:
+#      修改springmvc，默认的文件大小为1MB的限制，同时由于文件大了，请求的size也相应增大
+#      也可以在主类中使用java代码修改这个配置
+      max-file-size: 10MB
+      max-request-size: 15MB
 
 mybatis-plus:
   global-config:
@@ -26,3 +32,4 @@ mybatis-plus:
       id-type: auto
 server:
   port: 8080
+

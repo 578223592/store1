@@ -14,4 +14,10 @@ public interface UserService extends IService<User> {
     User login(User user);
 
     void updatePassword(Integer uid,String oldPassword,String newPassword);
+
+    void updateInfo(Integer uid,String phone,String email,Integer gender);
+
+    User getUserPartInfoById(Integer uid);
+
+    void updateAvatar(Integer uid,String avatar);
 }

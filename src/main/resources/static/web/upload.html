@@ -13,6 +13,8 @@
 		<link href="../bootstrap3/css/bootstrap.css" rel="stylesheet" type="text/css">
 		<script src="../bootstrap3/jquery-1.9.1.min.js"></script>
 		<script src="../bootstrap3/js/bootstrap.js"></script>
+		<script src="../bootstrap3/js/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
+
 		<!-- 字体图标 -->
 		<link rel="stylesheet" href="../bootstrap3/font-awesome-4.7.0/css/font-awesome.css" />
 		<link rel="stylesheet" type="text/css" href="../css/layout.css" />
@@ -136,11 +138,11 @@
 					</ul>
 					<div class="panel-body">
 						<!--上传头像表单开始-->
-						<form class="form-horizontal" role="form">
+						<form id="form-avatar-change" class="form-horizontal" role="form" >
 							<div class="form-group">
 								<label class="col-md-2 control-label">选择头像:</label>
 								<div class="col-md-5">
-									<img id="img-avatar" src="../images/index/user.jpg" class="img-responsive" />
+									<img id="img-avatar" src="../images/index/user.jpg" class="img-responsive"  />
 								</div>
 								<div class="clearfix"></div>
 								<div class="col-md-offset-2 col-md-4">
@@ -149,7 +151,7 @@
 							</div>
 							<div class="form-group">
 								<div class="col-sm-offset-2 col-sm-10">
-									<input type="submit" class="btn btn-primary" value="上传" />
+									<input type="button" id="btn-avatar-change" class="btn btn-primary" value="上传" />
 								</div>
 							</div>
 						</form>
@@ -242,6 +244,48 @@
 			</div>
 		</footer>
 		<!--页脚结束-->
+	<!--
+	想实现用户上传头像后就显示（整个页面不刷新的情况），必须要使用异步ajax请求，因此必须用js代码来实现上传头像，实现上传头像后就从
+	服务器拿到图片展示出来
+	-->
+	<script>
+		$(document).ready(function() {
+			let avatar = $.cookie("avatar");
+			console.log(avatar);
+			if (avatar!=null) {
+				$("#img-avatar").attr("src", avatar);
+			}
+		});
+		$("#btn-avatar-change").click(function(){
+			$.ajax({
+				url: "/users/change_avatar",
+				type:"POST",
+				//serialize()---》》可以将表单的数据自动拼接成key=value的形式提交给服务器，
+				// 一般提交是普通的控件类型的数据（text/password/checkbox...）
+				/*  FormData--->>将表单中的数据保持原有的结构进行数据的传输》》具体用法如下
+				* */
+				data: new FormData($("#form-avatar-change")[0]),
+				//ajax会自动将数据转化为字符串，由于传输的是文件，关闭默认的处理方式
+				processData: false,
+				contentType:false,
+				dataType:"json",
+				success: function(JSONResponse){
+					if(JSONResponse.state==200){
+						alert("头像修改成功");
+						//直接展示头像，并将头像保存在cookie里面方便刷新页面/重新进入此页面，服务器拿到文件地址
+						$("#img-avatar").attr("src",JSONResponse.data);
+						$.cookie("avatar",JSONResponse.data,{expires:7});
+					}else {
+						alert("头像修改失败，原因："+JSONResponse.message);
+					}
+				},
+				error: function(xhr) {
+					//这个xhr.status不是自己定义的，是官方提供的错误的码，注意
+					alert("error，原因：产生未知错误"+xhr.status);
+				}
+			});
+		});
+	</script>
 	</body>
 
 </html>
