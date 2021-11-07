@@ -43,6 +43,9 @@ public class UserBaseController {
             jsonResult.setState("6003");
         } else if (e instanceof FileUploadIOException) {
             jsonResult.setState("6004");
+        }else if (e instanceof AddressCountLimitException){
+            jsonResult.setState("4003");
+            jsonResult.setMessage("用户收货地址数目超过上限");
         }
         return jsonResult;
     }

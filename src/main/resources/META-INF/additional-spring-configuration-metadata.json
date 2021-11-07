@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "adddress.maxCount",
+      "type": "java.lang.String",
+      "description": "Description for adddress.maxCount."
+  }
+] }

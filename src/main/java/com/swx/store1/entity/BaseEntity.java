@@ -14,8 +14,8 @@ import java.util.Date;
  */
 @Data
 public class BaseEntity implements Serializable {
- private String  createdUser;
-    private Date createdTime ;
-    private String modifiedUser;
-    private Date modifiedTime;
+ protected String  createdUser;
+    protected Date createdTime ;
+    protected String modifiedUser;
+    protected Date modifiedTime;
 }
