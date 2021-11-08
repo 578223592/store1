@@ -1,7 +1,11 @@
 package com.swx.store1.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.swx.store1.entity.Address;
+import com.swx.store1.entity.DictDistrict;
 import com.swx.store1.entity.User;
+import com.swx.store1.service.impl.AddressServiceImpl;
+import com.swx.store1.service.impl.DictDistrictServiceImpl;
 import com.swx.store1.service.impl.UserServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -39,8 +45,10 @@ public class AddressServiceTest {
     测试UserDao功能：1根据表中字段uid查询返回User对象 2.传入User类，在数据库中生成数据（主键自增）
      */
     @Autowired
-    AddressService addressService;
+    AddressServiceImpl addressService;
 
+    @Autowired
+    DictDistrictServiceImpl dictDistrictService;
     @Test
     public void contextLoads1() {
         Address address = new Address();
@@ -48,6 +56,15 @@ public class AddressServiceTest {
         addressService.addAddress(address,"测试name",33);
 
 
+    }
+
+
+
+    @Test
+    public void contextLoads2() {
+        QueryWrapper<DictDistrict> queryWrapper = new QueryWrapper<DictDistrict>().eq("parent", "653100");
+        List<DictDistrict> list = dictDistrictService.list(queryWrapper);
+        System.out.println(list);
     }
 
 }

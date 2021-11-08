@@ -19,8 +19,8 @@
 		<link rel="stylesheet" type="text/css" href="../css/layout.css" />
 		<link rel="stylesheet" type="text/css" href="../css/top.css" />
 		<link rel="stylesheet" type="text/css" href="../css/footer.css" />
-		<script type="text/javascript" src="../js/distpicker.data.js"></script>
-		<script type="text/javascript" src="../js/distpicker.js"></script>
+		<!--<script type="text/javascript" src="../js/distpicker.data.js"></script>
+		<script type="text/javascript" src="../js/distpicker.js"></script>-->
 	</head>
 
 	<body>
@@ -150,7 +150,7 @@
 								<div class="form-group">
 									<label class="col-md-2 control-label"><span class="txtred">*</span>省/直辖市：</label>
 									<div class="col-md-3">
-										<select id="province-list" name="provinceCode" class="form-control" data-province="---- 选择省 ----"></select>
+										<select id="province-list" name="provinceCode" class="form-control" ></select>
 									</div>
 									<label class="col-md-2 control-label"><span class="txtred">*</span>城市：</label>
 									<div class="col-md-3">
@@ -287,6 +287,117 @@
 			</div>
 		</footer>
 		<!--页脚结束-->
+	<script type="text/javascript">
+		$("#btn-add-new-address").click(function () {
+			$.ajax({
+				url: "/address/add_new_Address",
+				type:"post",
+				data:$("#form-add-new-address").serialize(),
+				dataType:"json",
+				success: function(JSONResponse){
+					if(JSONResponse.state==200){
+						alert("添加地址成功")
+					}else {
+						alert("添加地址失败，原因："+JSONResponse.message);
+					}
+
+				},
+				error: function(xhr) {
+					//这个xhr.status不是自己定义的，是官方提供的错误的码，注意
+					alert("error，原因：产生未知错误"+xhr.status);
+				}
+			})
+		})
+		$("#city-list").change(function() {
+			//整个select标签的value就是选中的option的value
+			let cityParent = $("#city-list").val();
+			$("#area-list").empty();
+			$.ajax({
+				url: "/districts",
+				type:"Get",
+				data:"parent="+cityParent,
+				dataType:"json",
+				success: function(JSONResponse){
+					if(JSONResponse.state==200){
+						//<select id="province-list" name="provinceCode" class="form-control" data-province="---- 选择省 ----"></select>
+						let areaList = JSONResponse.data;
+						$("#area-list").append( "<option value='0'>---- 选择区域 ----</option>");
+						for (let i = 0; i < areaList.length; i++) {
+							let opt = "<option value='"+areaList[i].code+"'>"+areaList[i].name+"</option>";
+							$("#area-list").append(opt);
+						}
+					}else {
+						alert("查询失败，原因："+JSONResponse.message);
+					}
+
+				}/*,
+				error: function(xhr) {
+					//这个xhr.status不是自己定义的，是官方提供的错误的码，注意
+					alert("error，原因：产生未知错误"+xhr.status);
+				}*/
+			})
+		})
+		$("#province-list").change(function() {
+			//整个select标签的value就是选中的option的value
+			let provinceParent = $("#province-list").val();
+			$("#city-list").empty();
+			$.ajax({
+				url: "/districts",
+				type:"Get",
+				data:"parent="+provinceParent,
+				dataType:"json",
+				success: function(JSONResponse){
+					if(JSONResponse.state==200){
+						//<select id="province-list" name="provinceCode" class="form-control" data-province="---- 选择省 ----"></select>
+						let cityList = JSONResponse.data;
+						$("#city-list").append( "<option value='0'>---- 选择城市 ----</option>");
+						for (let i = 0; i < cityList.length; i++) {
+							let opt = "<option value='"+cityList[i].code+"'>"+cityList[i].name+"</option>";
+							$("#city-list").append(opt);
+						}
+					}else {
+						alert("查询失败，原因："+JSONResponse.message);
+					}
+
+				}/*,
+				error: function(xhr) {
+					//这个xhr.status不是自己定义的，是官方提供的错误的码，注意
+					alert("error，原因：产生未知错误"+xhr.status);
+				}*/
+			})
+		})
+
+		function showProvinceList() {
+			$.ajax({
+				url: "/districts",
+				type:"Get",
+				data:"parent=86",
+				dataType:"json",
+				success: function(JSONResponse){
+					if(JSONResponse.state==200){
+						//<select id="province-list" name="provinceCode" class="form-control" data-province="---- 选择省 ----"></select>
+						let provinceList = JSONResponse.data;
+						$("#province-list").append( "<option value='0'>---- 选择省 ----</option>");
+						for (let i = 0; i < provinceList.length; i++) {
+							let opt = "<option value='"+provinceList[i].code+"'>"+provinceList[i].name+"</option>";
+							$("#province-list").append(opt);
+						}
+					}else {
+						alert("查询失败，原因："+JSONResponse.message);
+					}
+
+				}/*,
+				error: function(xhr) {
+					//这个xhr.status不是自己定义的，是官方提供的错误的码，注意
+					alert("error，原因：产生未知错误"+xhr.status);
+				}*/
+			})
+			return undefined;
+		}
+
+		$(document).ready(showProvinceList());
+
+	</script>
 	</body>
 
 </html>

@@ -5,7 +5,6 @@ import com.swx.store1.entity.User;
 import com.swx.store1.service.impl.UserServiceImpl;
 import com.swx.store1.utils.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,10 +23,10 @@ import java.util.UUID;
  * FileName: UserController
  * Description:
  */
-@Controller
+@org.springframework.stereotype.Controller
 @RequestMapping("/users")
 @ResponseBody
-public class UserController extends UserBaseController {
+public class Controller extends BaseController {
 
     @Autowired
     UserServiceImpl userService;

@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
  * FileName: UserBaseController
  * Description:由于UserController中每个方法都有可能会产生异常，因此创建此基类来抽取处理异常
  */
-public class UserBaseController {
+public class BaseController {
 
     /*   @ExceptionHandler注解用于统一处理方法抛出的异常。当我们使用这个注解时，需要定义一个异常的处理方法，再给这个方法加上
      *  @ExceptionHandler注解，这个方法就会处理类中其他方法（被@RequestMapping注解）抛出的异常。
