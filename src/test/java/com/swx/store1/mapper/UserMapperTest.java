@@ -1,7 +1,7 @@
 package com.swx.store1.mapper;
 
 import com.swx.store1.entity.User;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

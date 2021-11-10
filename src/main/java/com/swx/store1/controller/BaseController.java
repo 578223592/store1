@@ -18,7 +18,7 @@ public class BaseController {
     /*   @ExceptionHandler注解用于统一处理方法抛出的异常。当我们使用这个注解时，需要定义一个异常的处理方法，再给这个方法加上
      *  @ExceptionHandler注解，这个方法就会处理类中其他方法（被@RequestMapping注解）抛出的异常。
      *  @ExceptionHandler注解中可以添加参数，参数是某个异常类的class，代表这个方法专门处理该类异常。*/
-    @ExceptionHandler({ServiceException.class,FileUploadException.class})
+    @ExceptionHandler({ServiceException.class, FileUploadException.class})
     public JsonResult<Void> exceptionHand(Exception e) {
         JsonResult<Void> jsonResult = new JsonResult<>();
         if (e instanceof UserNameDuplicatedException) {
@@ -43,9 +43,21 @@ public class BaseController {
             jsonResult.setState("6003");
         } else if (e instanceof FileUploadIOException) {
             jsonResult.setState("6004");
-        }else if (e instanceof AddressCountLimitException){
+        } else if (e instanceof AddressCountLimitException) {
             jsonResult.setState("4003");
             jsonResult.setMessage("用户收货地址数目超过上限");
+        } else if (e instanceof AddressNotFoundException) {
+            jsonResult.setState("2001");
+            jsonResult.setMessage("该地址信息不存在");
+        } else if (e instanceof AddressDeniedException) {
+            jsonResult.setState("2002");
+            jsonResult.setMessage("地址修改非法");
+        } else if (e instanceof DeleteException) {
+            jsonResult.setState("2003");
+            jsonResult.setMessage("信息删除失败");
+        } else if (e instanceof ProductNotFoundException) {
+            jsonResult.setState("2004");
+            jsonResult.setMessage("查找商品失败");
         }
         return jsonResult;
     }

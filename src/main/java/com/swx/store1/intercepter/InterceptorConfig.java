@@ -32,8 +32,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
         patterns.add("/web/index.html");
         patterns.add("/web/product.html");
         //注意自己控制器的mapping和案例里面不一样，这里面要对应的修改为自己的
-       patterns.add("/users/register");
-       patterns.add("/users/login");
+        patterns.add("/users/register");
+        patterns.add("/users/login");
 //        patterns.add("/users/**");
         patterns.add("/districts/**");
         patterns.add("/products/**");
@@ -43,7 +43,6 @@ public class InterceptorConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 .excludePathPatterns(patterns);
     }
-
 
 
 }

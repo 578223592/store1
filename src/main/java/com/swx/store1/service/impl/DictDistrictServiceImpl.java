@@ -10,14 +10,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- *
+ * 因为前台不用使用id值，以及本来就是根据parent来查询的，所以前台不要这两个属性了，设置为null减少资源消耗,只保留code和name属性
+ *   其实这个可以写在controller里面的，弄在这是为了练习
  */
 @Service
 public class DictDistrictServiceImpl extends ServiceImpl<DictDistrictMapper, DictDistrict>
         implements DictDistrictService {
 
-    //因为前台不用使用id值，以及本来就是根据parent来查询的，所以前台不要这两个属性了，设置为null减少资源消耗,只保留code和name属性
-    //其实这个可以写在controller里面的，弄在这是为了练习
+
     @Override
     public List<DictDistrict> list(Wrapper<DictDistrict> queryWrapper) {
 

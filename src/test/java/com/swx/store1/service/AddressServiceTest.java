@@ -1,9 +1,12 @@
 package com.swx.store1.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.swx.store1.entity.Address;
 import com.swx.store1.entity.DictDistrict;
 import com.swx.store1.entity.User;
+import com.swx.store1.mapper.AddressMapper;
 import com.swx.store1.service.impl.AddressServiceImpl;
 import com.swx.store1.service.impl.DictDistrictServiceImpl;
 import com.swx.store1.service.impl.UserServiceImpl;
@@ -40,24 +43,23 @@ public class AddressServiceTest {
     /**
      * @author admin
      * @Date 2021/10/31 21:29
-     * @Description
-
-    测试UserDao功能：1根据表中字段uid查询返回User对象 2.传入User类，在数据库中生成数据（主键自增）
+     * @Description 测试UserDao功能：1根据表中字段uid查询返回User对象 2.传入User类，在数据库中生成数据（主键自增）
      */
     @Autowired
     AddressServiceImpl addressService;
-
+    @Autowired
+    AddressMapper addressMapper;
     @Autowired
     DictDistrictServiceImpl dictDistrictService;
+
     @Test
     public void contextLoads1() {
         Address address = new Address();
         address.setAddress("宇宙-中国");
-        addressService.addAddress(address,"测试name",33);
+        addressService.addAddress(address, "测试name", 33);
 
 
     }
-
 
 
     @Test
@@ -67,4 +69,27 @@ public class AddressServiceTest {
         System.out.println(list);
     }
 
+    @Test
+    public void contextLoads3() {
+        addressService.setDefaultAddress(3, 115, "思无邪-修改默认地址");
+    }
+
+    @Test
+    public void contextLoads4() {
+        IPage<Address> addressIPage = new Page<Address>(1, 1);
+        List<Address> list = addressMapper.selectPagedByUidOrderByModifiedTimeDesc(addressIPage, 115);
+        System.out.println(list);
+    }
+
+    @Test
+    public void contextLoads5() {
+        IPage<Address> addressIPage = new Page<Address>(1, 1);
+        addressMapper.deleteByAid(1);
+
+    }
+
+    @Test
+    public void contextLoads6() {
+        addressService.deleteAddress(7, 115, "思无邪");
+    }
 }
