@@ -1,6 +1,7 @@
 package com.swx.store1.controller;
 
 import com.swx.store1.entity.Cart;
+import com.swx.store1.entity.CartVO;
 import com.swx.store1.service.impl.CartServiceImpl;
 import com.swx.store1.utils.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,12 +42,12 @@ public class CartController extends BaseController {
         return jsonResult;
     }
     @RequestMapping("/show_cart_list")
-    public JsonResult<List<Cart>> showCartList(HttpSession session){
-        JsonResult<List<Cart>> jsonResult = new JsonResult<>();
+    public JsonResult<List<CartVO>> showCartList(HttpSession session){
+        JsonResult<List<CartVO>> jsonResult = new JsonResult<>();
         Integer uid = getUidInSession(session);
-        List<Cart> cartList = cartService.showCartList(uid);
+        List<CartVO> cartVOList = cartService.showCartList(uid);
         jsonResult.setState("200");
-        jsonResult.setData(cartList);
+        jsonResult.setData(cartVOList);
         return jsonResult;
     }
 }

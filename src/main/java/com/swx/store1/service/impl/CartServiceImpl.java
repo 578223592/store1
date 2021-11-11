@@ -2,6 +2,7 @@ package com.swx.store1.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.swx.store1.entity.Cart;
+import com.swx.store1.entity.CartVO;
 import com.swx.store1.mapper.CartMapper;
 import com.swx.store1.service.CartService;
 
@@ -41,16 +42,8 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart>
     }
 
     @Override
-    public List<Cart> showCartList(Integer uid) {
-        //无异常抛出
-        List<Cart> cartList = cartMapper.selectByUid(uid);
-        for (Cart item : cartList) {
-            item.setModifiedUser(null);
-            item.setCreatedUser(null);
-            item.setCreatedTime(null);
-            item.setModifiedTime(null);
-        }
-        return cartList;
+    public List<CartVO> showCartList(Integer uid) {
+        return cartMapper.selectCartVOByUid(uid);
     }
 
 

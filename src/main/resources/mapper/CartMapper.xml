@@ -13,7 +13,19 @@
     <select id="selectByUid" resultType="com.swx.store1.entity.Cart">
         select *
         from t_cart
-        where
-        uid = #{uid,jdbcType=NUMERIC}
+        where uid = #{uid,jdbcType=NUMERIC}
+    </select>
+    <select id="selectCartVOByUid" resultType="com.swx.store1.entity.CartVO">
+        select cid,
+               uid,
+               pid,
+               t_cart.price,
+               t_cart.num,
+               t_product.title,
+               t_product.image,
+               t_product.price AS realprice
+        FROM store1.t_cart
+                 left join store1.t_product on t_cart.pid = t_product.id
+        where uid = #{uid}
     </select>
 </mapper>
