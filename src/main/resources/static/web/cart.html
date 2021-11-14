@@ -230,35 +230,37 @@
             success: function (JSONResponse) {
                 if (JSONResponse.state == 200) {
                     let cartVOList = JSONResponse.data;
-                    let i=1;
-                    for (let cartVO of cartVOList) {
+                    for (let i = 0; i < cartVOList.length; i++){
                         let s = "<tr>\n" +
                             "<td>\n" +
                             "\t<input type=\"checkbox\" class=\"ckitem\" />\n" +
                             "</td>\n" +
                             "<td><img src=\"..#{image}collect.png\" class=\"img-responsive\" /></td>\n" +
                             "<td>#{title}</td>\n" +
-                            "<td>¥<span id=\"goodsPrice1\">#{realPrice}</span></td>\n" +
+                            "<td>¥<span id=\"goodsPrice#{i5}\">#{realPrice}</span></td>\n" +
                             "<td>\n" +
-                            "\t<input type=\"button\" value=\"-\" class=\"num-btn\" onclick=\"reduceNum(#{i})\" />\n" +
-                            "\t<input id=\"goodsCount1\" type=\"text\" size=\"2\" readonly=\"readonly\" class=\"num-text\" value=\"#{num}\">\n" +
-                            "\t<input class=\"num-btn\" type=\"button\" value=\"+\" onclick=\"addNum(#{i})\" />\n" +
+                            "<input type=\"button\" value=\"-\" class=\"num-btn\" onclick=\"reduceNum(#{i1})\" />\n" +
+                            "<input id=\"goodsCount#{i2}\" type=\"text\" size=\"2\" readonly=\"readonly\" class=\"num-text\" value=\"#{num}\">\n" +
+                            "<input class=\"num-btn\" type=\"button\" value=\"+\" onclick=\"addNum(#{i3})\" />\n" +
                             "</td>\n" +
-                            "<td><span id=\"goodsCast1\"></span>#{totalPrice}</td>\n" +
+                            "<td><span id=\"goodsCast#{i4}\">#{total}</span></td>\n" +
                             "<td>\n" +
                             "\t\t<input type=\"button\" onclick=\"delCartItem(this)\" class=\"cart-del btn btn-default btn-xs\" value=\"删除\" />\n" +
                             "\t</td>\n" +
                             "</tr> ";
-                        s = s.replace("#{title}", cartVO.title + "------已降价" + (cartVO.price - cartVO.realPrice));
-                        s = s.replace("#{realPrice}", cartVO.realPrice);
-                        s = s.replace("#{num}", cartVO.num);
-                        s = s.replace("#{image}", cartVO.image);
-                        s = s.replace("#{totalPrice}", (cartVO.num * cartVO.realPrice));
-                        s = s.replace("#{i}", i);
+                        s = s.replace("#{title}", cartVOList[i].title + "------已降价" + (cartVOList[i].price - cartVOList[i].realPrice));
+                        s = s.replace("#{realPrice}", cartVOList[i].realPrice);
+                        s = s.replace("#{num}", cartVOList[i].num);
+                        s = s.replace("#{image}", cartVOList[i].image);
+                        // s = s.replace("#{totalPrice}", (cartVO.num * cartVO.realPrice));
+                        s = s.replace("#{i1}", cartVOList[i].cid);
+                        s = s.replace("#{i2}", cartVOList[i].cid);
+                        s = s.replace("#{i3}", cartVOList[i].cid);
+                        s = s.replace("#{i4}", cartVOList[i].cid);
+                        s = s.replace("#{i5}", cartVOList[i].cid);
+                        s = s.replace("#{total}", "¥" + (cartVOList[i].num * cartVOList[i].realPrice));
                         $("#cart-list").append(s);
-                        i++;
                     }
-
                 } else {
                     alert("展示购物车失败，原因：" + JSONResponse.message);
                 }
@@ -268,7 +270,6 @@
                 //这个xhr.status不是自己定义的，是官方提供的错误的码，注意
                 alert("error，原因：产生未知错误" + xhr.status);
             }
-
 
         })
     })

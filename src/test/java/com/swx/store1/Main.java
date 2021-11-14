@@ -2,90 +2,88 @@ package com.swx.store1;
 
 import java.io.*;
 
-/**
- * @author admin
- * @Date 2021/11/11 20:07
- * @Description 思路主要参考：    https://www.cnblogs.com/dusf/p/kmp.html    ，
-
- *              理解的前提为：明白如果abcdabce在e的时候匹配不成功不用从第0个a（为统一，下标从0开始）开始匹配，
- *              而是直接从重复的abc后的一个元素d开始匹配即可，因为前后有重复的abc ，
- *              假设已经知道e不匹配要跳回的元素是d的话（next数组），那么这就是一个不断匹配的过程
- *              即：不成功就跳回到前一个重复的串的后一个元素，匹配。。。成功就跳回到前一个重复的串的后一个元素，匹配。。。一直重复下去
- *              明白了这点下一步就是看跳回哪个下标，跳回的下标用next数组存放，因此next数组存放的就是：
- *              //next[k]表示的是第k个如果不匹配应该跳到哪个点，从第0个数开始----k点之前哦  ---也就是说第k点之前有多少个重复的！！！
-     *         //比如a，   b，   c，    a，  b，  d 对应的next数组为
-     *         //   -1，  0,    0,     0,  1,   2，
-     *         //这样正好匹配当a不匹配时只能跳回第0个数a开始匹配，
-     *         // 当b不能匹配时可以确保第二个a已经匹配，因此可以直接跳回第1个数（第0个b）开始匹配
- *             //也是因此第0个数不用判断（直接给-1，标识应该移动母串而不是子串了，因为第0个数都不匹配），最后一个数也是不用参与判断的（原因见上5行注释）
- *
- *             明白了上述过程后重点就是计算next数组，在计算next数组时候会发现一件事
- *              ：kmp就是：比较字母串是否匹配，               不匹配就往next数组指定的下标跳
- *     ：计算next数组就是: 比较当前字符串的后面与前面是否匹配  ， 不匹配就？
- *                  应该已经有一些感觉了，不匹配就和比较的过程一样呗，往next数组指定的下标跳呗~！！！！！！！！！！最关键的点结束了
- *                  （跳的时候不用太担心边界，是因为next数组存放的是一定是往前跳的，往后跳是不可能的）
- *                  这两个步骤就是重复的呀！！！！，而且最难理解的就在于k=next[k]，即往前一个可以跳的地方跳再重新匹配这个过程
- *                  之后的一些细节应该不太难了
- * @return
- * @param
+/*
+创造一个数组维护他们之间的种族关系
+animal[0]不管，说是哪个动物就用哪个下标
+疑点：怎么在合并动物时更新他们的种族信息（谁吃谁的信息）：靠（路径%3）
  */
-
 public class Main {
+    static int[] fa = new int[50000 + 10];
+    static int[] dis = new int[50000 + 10];
+
     public static void main(String[] args) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter BufferedWriter = new BufferedWriter(new OutputStreamWriter(System.out));
-        int n = Integer.parseInt(bufferedReader.readLine());
-        String s1 = bufferedReader.readLine();
-        int m = Integer.parseInt(bufferedReader.readLine());
-        String s2 = bufferedReader.readLine();
-        char[] p = s1.toCharArray();
-        char[] s = s2.toCharArray();
-        int[] next = ne(p);
-        //计算完ne数组下面计算的是kmp的输出
-        /*
-        这里的写法和求next数组基本一模一样，但是需要注意的是第0个数和最后一个数需要参与比较，
-        因此改动：1.j=-1开始，2.while (j <= s.length - 1)中的“=”；
-        然后由于求的是所有匹配结果，因此在匹配后加入特判k == p.length - 1，为true时
-                    表示匹配成功，此时应该输出结果，以及当成此节点匹配失败重新开始匹配值（k = next[k];）
-         */
-        int k = -1, j = -1;
-        while (j <= s.length - 1) {
-            if (k == -1 || s[j] == p[k]) {
-                if (k == p.length - 1) {
-                    BufferedWriter.write(j - k + " ");
-                    k = next[k];
-                    continue;
+        for (int i = 0; i < dis.length; i++) {
+            fa[i] = i;
+        }
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));
+        String[] split = reader.readLine().split(" ");
+        int n = Integer.parseInt(split[0]);
+        int k = Integer.parseInt(split[1]);
+        int res = 0;
+        for (int i = 0; i < k; i++) {
+            split = reader.readLine().split(" ");
+            int c = Integer.parseInt(split[0]);
+            int x = Integer.parseInt(split[1]);
+            int y = Integer.parseInt(split[2]);
+            if (x > n || y > n) {
+                res++;
+                continue;
+            }
+            int xf = findFa(x);
+            int yf = findFa(y);
+            if (c == 1) {
+                if (xf == yf && (dis[x] - dis[y]) % 3 != 0) {
+                    res++;
+                } else if (xf != yf) {
+                    //真话，合并xy所在的集合
+                    //把yf当成了合并集合之后的祖宗结点
+                    fa[xf] = yf;
+                    //满足的关系是（xf到xy的距离）+（x到xf的距离）=y到yf的距离；
+                    dis[xf] = dis[y] - dis[x];
                 }
-                k++;
-                j++;
-            }else {
-                k = next[k];
+            } else if (c == 2) {
+                //(dis[a]-dis[b])%3==1表示可以a可以吃b
+                //自己吃自己在下面判断中可以判断出来，因此不进行特判了
+                if (xf == yf && (dis[x] - dis[y] - 1) % 3 != 0) {
+                    //(dis[x] - dis[y]) % 3 != 1是错的，因为(a+b)%3!=a%3+b%3,可以带a，b为1，2
+                    res++;
+                } else if (xf != yf) {
+                    //真话，合并xy所在的集合
+                    //把yf当成了合并集合之后的祖宗结点
+                    fa[xf] = yf;
+                    //满足的关系是（xf到xy的距离）+（x到xf的距离）=y到yf的距离+1；
+                    dis[xf] = 1 + dis[y] - dis[x];
+                }
+            } else {
+                System.out.println("input error!");
             }
         }
-        bufferedReader.close();
-        BufferedWriter.flush();
-        BufferedWriter.close();
+        writer.write(res + "");
+        reader.close();
+        writer.flush();
+        writer.close();
+
     }
 
-    private static int[] ne(char[] p) {
-        //next[k]表示的是k点之前有多少个重复的，从第0个数开始
-        //比如a，   b，   c，    a，  b，  d 对应的next数组为
-        //   -1，  0,    0,     0,  1,   2，
-        //这样正好匹配当a不匹配时只能跳回第0个数a开始匹配，
-        // 当b不能匹配时可以确保第二个a已经匹配，因此可以直接跳回第1个数（第0个b）开始匹配
-        //也是因此第0个数不用判断（直接给-1，标识应该移动母串而不是子串了，因为第0个数都不匹配），最后一个数也是不用参与判断的（原因见上5行注释）
-        int[] next = new int[p.length];
-        next[0] = -1;
-        int k = -1, j = 0;
-        while (j < p.length - 1) {
-            if (k == -1 || p[j] == p[k]) {
-                k++;
-                j++;
-                next[j] = k;
-            } else {
-                k = next[k];
-            }
+    /*
+    find函数里面由于自带路径压缩，因此路径压缩时候必须更新dis数组
+     */
+    public static int findFa(int x) {
+        if (fa[x] != x) {
+            //因为fa[x]的值会改变，因此先更新dis数组里面的值再更新fa[x]
+//            dis[x] += dis[fa[x]];  注意这种写法是错的，因为findFa函数中路径压缩的思路是：如果此结点不是祖宗结点，那么就开始递归
+//            fa[x] = findFa(fa[x]);   递归到最后的结点就是祖宗结点，出递归后更新的逻辑是儿子的儿子直接指向祖宗，儿子的儿子的儿子指向祖宗
+//                                    是从上往下更新的，因此在这个过程中的dis数组的更新也必须遵从这个逻辑：从辈分高的开始更新，或者说是
+//                                       出递归之后以递归更新后的最新父辈的dis数组来更新子辈的dis数组，因为父辈的dis数组的变化会影响子
+//                                      辈，而子辈的dis数组的变化不会影响父辈；
+//                                   如果直接那么写逻辑就变成了：先更新子辈的dis，然后更新父辈的，此时会造成父辈dis的变化不会传递给子辈，
+//                                  自然就错误了
+//
+            int t=findFa(fa[x]);   //因此这种写法是对的，先出递归，再更新dis数组！！！！ y总强啊
+            dis[x]+=dis[fa[x]];
+            fa[x]=t;
         }
-        return next;
+        return fa[x];
     }
 }
